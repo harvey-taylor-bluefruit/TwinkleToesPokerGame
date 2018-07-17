@@ -8,6 +8,7 @@
 
     public enum Rank
     {
+        NULL,
         Two,
         Three,
         Four,

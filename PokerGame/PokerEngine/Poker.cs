@@ -21,14 +21,17 @@ namespace PokerEngine
 
         private static List<Card> CaclulateBestPairAndKickerHand(List<Card> handOne, List<Card> handTwo)
         {
-            if (HasPair(handOne))
+            if (HasPair(handOne) != Rank.NULL || HasPair(handTwo) != Rank.NULL)
             {
+                if (HasPair(handOne) > HasPair(handTwo))
+                {
+                    return handOne;
+                }
+                if (HasPair(handOne) < HasPair(handTwo))
+                {
+                    return handTwo;
+                }
                 return handOne;
-            }
-
-            if (HasPair(handTwo))
-            {
-                return handTwo;
             }
             return null;
         }
@@ -52,7 +55,7 @@ namespace PokerEngine
             return null;
         }
 
-        private static bool HasPair(List<Card> hand)
+        private static Rank HasPair(List<Card> hand)
         {
             for (var i = 0; i < hand.Count; i++)
             {
@@ -61,11 +64,11 @@ namespace PokerEngine
                 {
                     if (card.rank == hand[i].rank)
                     {
-                        return true;
+                        return card.rank;
                     }
                 }
             }
-            return false;
+            return Rank.NULL;
         }
 
         private static Card HighestCard(List<Card> hand)
