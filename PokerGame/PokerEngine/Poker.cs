@@ -7,13 +7,69 @@ namespace PokerEngine
     {
         public static List<Card> CalculateWinningHand(List<Card> handOne, List<Card> handTwo)
         {
-            List<Card> winningHand = CaclulateHandWithBestPair(handOne, handTwo);
+            List<Card> winningHand = CaclulateHandWithBestTwoPair(handOne, handTwo);
+            if (winningHand != null)
+            {
+                return winningHand;
+            }
+
+            winningHand = CaclulateHandWithBestPair(handOne, handTwo);
             if (winningHand != null)
             {
                 return winningHand;
             }
 
             return CalculateHandWithHighestCardAndKicker(handOne, handTwo);
+        }
+
+        private static List<Card> CaclulateHandWithBestTwoPair(List<Card> handOne, List<Card> handTwo)
+        {
+            Rank handOnePair;
+            Rank handOneSeccondPair;
+            bool handOneHasTwoPair = HasTwoPair(handOne, out handOnePair, out handOneSeccondPair);
+
+            List<Card> handOnePairs = new List<Card>()
+            {
+                new Card() { Rank = handOnePair },
+                new Card() { Rank = handOneSeccondPair }
+            };
+            Rank handOneHighestPairHighestCard = HighestCard(handOnePairs).Rank;
+
+            Rank handTwoPair;
+            Rank handTwoSeccondPair;
+            bool handTwoHasTwoPair = HasTwoPair(handTwo, out handTwoPair, out handTwoSeccondPair);
+
+            List<Card> handTwoPairs = new List<Card>()
+            {
+                new Card() { Rank = handTwoPair },
+                new Card() { Rank = handTwoSeccondPair }
+            };
+            Rank handTwoHighestPairHighestCard = HighestCard(handTwoPairs).Rank;
+
+            if (handOneHasTwoPair && handTwoHasTwoPair)
+            {
+
+                if (handOneHighestPairHighestCard > handTwoHighestPairHighestCard)
+                {
+                    return handOne;
+                }
+                if (handOneHighestPairHighestCard < handTwoHighestPairHighestCard)
+                {
+                    return handTwo;
+                }
+            }
+
+            if (handOneHasTwoPair)
+            {
+                return handOne;
+            }
+
+            if (handTwoHasTwoPair)
+            {
+                return handTwo;
+            }
+
+            return null;
         }
 
         private static List<Card> CaclulateHandWithBestPair(List<Card> handOne, List<Card> handTwo)
@@ -79,6 +135,23 @@ namespace PokerEngine
             pair = 0;
             return false;
         }
+
+        private static bool HasTwoPair(List<Card> hand, out Rank pairOne, out Rank pairTwo)
+        {
+            var handICanManipulate = new List<Card>(hand); 
+            bool handHasOnePair = HasPair(hand, out pairOne);
+            Rank ranktoRemove =  pairOne;
+            handICanManipulate.RemoveAll(card => card.Rank == ranktoRemove);
+
+            bool handHasSeccondOnePair = HasPair(handICanManipulate, out pairTwo);
+
+            if (handHasOnePair && handHasSeccondOnePair)
+            {
+                return true;
+            }
+            return false;
+        }
+
 
         private static Card HighestCard(List<Card> hand)
         {
