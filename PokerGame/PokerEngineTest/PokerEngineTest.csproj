@@ -53,6 +53,7 @@
     <Compile Include="HighCardHandTest.cs" />
     <Compile Include="PairHandTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TwoPairHandTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PokerEngine\PokerEngine.csproj">
