@@ -2,8 +2,8 @@
 {
     public class Card
     {
-        public Rank rank { get; set; }
-        public Suit suit { get; set; }
+        public Rank Rank { get; set; }
+        public Suit Suit { get; set; }
     }
 
     public enum Rank

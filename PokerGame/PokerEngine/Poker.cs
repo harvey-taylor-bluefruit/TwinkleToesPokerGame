@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PokerEngine
 {
@@ -21,33 +18,43 @@ namespace PokerEngine
 
         private static List<Card> CaclulateBestPairAndKickerHand(List<Card> handOne, List<Card> handTwo)
         {
-            if (HasPair(handOne) != Rank.NULL || HasPair(handTwo) != Rank.NULL)
+            Rank handOnePair;
+            bool handOneHasPair = HasPair(handOne, out handOnePair);
+
+            Rank handTwoPair;
+            bool handTwoHasPair = HasPair(handTwo, out handTwoPair);
+
+            if (handOneHasPair || handTwoHasPair)
             {
-                if (HasPair(handOne) > HasPair(handTwo))
+                if (handOnePair > handTwoPair)
                 {
                     return handOne;
                 }
-                if (HasPair(handOne) < HasPair(handTwo))
+                if (handOnePair < handTwoPair)
                 {
                     return handTwo;
                 }
-                return handOne;
             }
             return null;
         }
 
         private static List<Card> CalculateHandWithHighestCardAndKicker(List<Card> handOne, List<Card> handTwo)
         {
-            List<Card> orderedHandOne = handOne.OrderBy(card => card.rank).ToList();
-            List<Card> orderedHandTwo = handTwo.OrderBy(card => card.rank).ToList();
+            List<Card> orderedHandOne = handOne
+                .OrderBy(card => card.Rank)
+                .ToList();
+
+            List<Card> orderedHandTwo = handTwo
+                .OrderBy(card => card.Rank)
+                .ToList();
 
             for (int i = 0; i < orderedHandOne.Count; i++)
             {
-                if (orderedHandTwo[i].rank > orderedHandOne[i].rank)
+                if (orderedHandTwo[i].Rank > orderedHandOne[i].Rank)
                 {
                     return handTwo;
                 }
-                if (orderedHandTwo[i].rank < orderedHandOne[i].rank)
+                if (orderedHandTwo[i].Rank < orderedHandOne[i].Rank)
                 {
                     return handOne;
                 }
@@ -55,33 +62,29 @@ namespace PokerEngine
             return null;
         }
 
-        private static Rank HasPair(List<Card> hand)
+        private static bool HasPair(List<Card> hand, out Rank pair)
         {
             for (var i = 0; i < hand.Count; i++)
             {
                 List<Card> subHand = hand.GetRange(i + 1, hand.Count - i - 1);
                 foreach (Card card in subHand)
                 {
-                    if (card.rank == hand[i].rank)
+                    if (card.Rank == hand[i].Rank)
                     {
-                        return card.rank;
+                        pair = card.Rank;
+                        return true;
                     }
                 }
             }
-            return Rank.NULL;
+            pair = 0;
+            return false;
         }
 
         private static Card HighestCard(List<Card> hand)
         {
-            Card handHighCard = hand[0];
-            foreach (Card card in hand)
-            {
-                if (handHighCard.rank <= card.rank)
-                {
-                    handHighCard = card;
-                }
-            }
-            return handHighCard;
+            var handOrderedByHighestCard = hand.OrderByDescending(card => card.Rank);
+            var highestCard = handOrderedByHighestCard.First();
+            return highestCard;
         }
     }
 
