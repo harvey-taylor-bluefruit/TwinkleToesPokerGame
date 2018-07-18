@@ -27,7 +27,6 @@ namespace PokerEngine
             Rank handOnePair;
             Rank handOneSeccondPair;
             bool handOneHasTwoPair = HasTwoPair(handOne, out handOnePair, out handOneSeccondPair);
-
             List<Card> handOnePairs = new List<Card>()
             {
                 new Card() { Rank = handOnePair },
@@ -38,7 +37,6 @@ namespace PokerEngine
             Rank handTwoPair;
             Rank handTwoSeccondPair;
             bool handTwoHasTwoPair = HasTwoPair(handTwo, out handTwoPair, out handTwoSeccondPair);
-
             List<Card> handTwoPairs = new List<Card>()
             {
                 new Card() { Rank = handTwoPair },
@@ -48,7 +46,6 @@ namespace PokerEngine
 
             if (handOneHasTwoPair && handTwoHasTwoPair)
             {
-
                 if (handOneHighestPairHighestCard > handTwoHighestPairHighestCard)
                 {
                     return handOne;
@@ -68,7 +65,6 @@ namespace PokerEngine
             {
                 return handTwo;
             }
-
             return null;
         }
 
