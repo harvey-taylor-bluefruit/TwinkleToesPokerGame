@@ -7,7 +7,7 @@ namespace PokerEngine
     {
         public static List<Card> CalculateWinningHand(List<Card> handOne, List<Card> handTwo)
         {
-            List<Card> winningHand = CaclulateBestPairAndKickerHand(handOne, handTwo);
+            List<Card> winningHand = CaclulateHandWithBestPair(handOne, handTwo);
             if (winningHand != null)
             {
                 return winningHand;
@@ -16,7 +16,7 @@ namespace PokerEngine
             return CalculateHandWithHighestCardAndKicker(handOne, handTwo);
         }
 
-        private static List<Card> CaclulateBestPairAndKickerHand(List<Card> handOne, List<Card> handTwo)
+        private static List<Card> CaclulateHandWithBestPair(List<Card> handOne, List<Card> handTwo)
         {
             Rank handOnePair;
             bool handOneHasPair = HasPair(handOne, out handOnePair);

@@ -60,5 +60,32 @@ namespace PokerEngineTests
             List<Card> expectedWinningHand = PairOfAcesHand;
             Assert.AreEqual(expectedWinningHand, actualWinningHand);
         }
+
+        [TestMethod]
+        public void hand_with_same_pair_but_higher_kicker_wins()
+        {
+            List<Card> PairOfAcesKingHighHand = new List<Card>()
+            {
+                new Card() { Rank = Rank.Ace },
+                new Card() { Rank = Rank.Ace },
+                new Card() { Rank = Rank.King },
+                new Card() { Rank = Rank.Jack },
+                new Card() { Rank = Rank.Nine }
+            };
+
+            List<Card> PairOfAcesJackHighHand = new List<Card>()
+            {
+                new Card() { Rank = Rank.Ace },
+                new Card() { Rank = Rank.Ace },
+                new Card() { Rank = Rank.Jack },
+                new Card() { Rank = Rank.Nine },
+                new Card() { Rank = Rank.Five }
+            };
+
+            List<Card> actualWinningHand = Poker.CalculateWinningHand(PairOfAcesJackHighHand, PairOfAcesKingHighHand);
+
+            List<Card> expectedWinningHand = PairOfAcesKingHighHand;
+            Assert.AreEqual(expectedWinningHand, actualWinningHand);
+        }
     }
 }
