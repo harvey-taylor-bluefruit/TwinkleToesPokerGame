@@ -24,25 +24,15 @@ namespace PokerEngine
 
         private static List<Card> CaclulateHandWithBestTwoPair(List<Card> handOne, List<Card> handTwo)
         {
-            Rank handOnePair;
+            Rank handOneFirstPair;
             Rank handOneSeccondPair;
-            bool handOneHasTwoPair = HasTwoPair(handOne, out handOnePair, out handOneSeccondPair);
-            List<Card> handOnePairs = new List<Card>()
-            {
-                new Card() { Rank = handOnePair },
-                new Card() { Rank = handOneSeccondPair }
-            };
-            Rank handOneHighestPairHighestCard = HighestCard(handOnePairs).Rank;
+            bool handOneHasTwoPair = HasTwoPair(handOne, out handOneFirstPair, out handOneSeccondPair);
+            Rank handOneHighestPairHighestCard = CalculateHighestPair(handOneFirstPair, handOneSeccondPair);
 
-            Rank handTwoPair;
+            Rank handTwoFirstPair;
             Rank handTwoSeccondPair;
-            bool handTwoHasTwoPair = HasTwoPair(handTwo, out handTwoPair, out handTwoSeccondPair);
-            List<Card> handTwoPairs = new List<Card>()
-            {
-                new Card() { Rank = handTwoPair },
-                new Card() { Rank = handTwoSeccondPair }
-            };
-            Rank handTwoHighestPairHighestCard = HighestCard(handTwoPairs).Rank;
+            bool handTwoHasTwoPair = HasTwoPair(handTwo, out handTwoFirstPair, out handTwoSeccondPair);
+            Rank handTwoHighestPairHighestCard = CalculateHighestPair(handTwoFirstPair, handTwoSeccondPair);
 
             if (handOneHasTwoPair && handTwoHasTwoPair)
             {
@@ -54,18 +44,29 @@ namespace PokerEngine
                 {
                     return handTwo;
                 }
+                return null;
             }
 
             if (handOneHasTwoPair)
             {
                 return handOne;
             }
-
             if (handTwoHasTwoPair)
             {
                 return handTwo;
             }
             return null;
+        }
+
+        private static Rank CalculateHighestPair(Rank pairOne, Rank pairTwo)
+        {
+            List<Card> handOnePairs = new List<Card>()
+            {
+                new Card() { Rank = pairOne },
+                new Card() { Rank = pairTwo }
+            };
+            Rank highestPair = HighestCard(handOnePairs).Rank;
+            return highestPair;
         }
 
         private static List<Card> CaclulateHandWithBestPair(List<Card> handOne, List<Card> handTwo)
