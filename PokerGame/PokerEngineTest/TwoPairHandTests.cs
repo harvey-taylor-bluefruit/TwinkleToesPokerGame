@@ -10,7 +10,7 @@ namespace PokerEngineTests
         [TestMethod]
         public void hand_with_two_pair_wins_against_a_pair()
         {
-            List<Card> fivesAndTwosHand = new List<Card>()
+            var fivesAndTwosHand = new List<Card>()
             {
                 new Card() { Rank = Rank.Two },
                 new Card() { Rank = Rank.Ace },
@@ -19,7 +19,7 @@ namespace PokerEngineTests
                 new Card() { Rank = Rank.Five }
             };
 
-            List<Card> PairOfTwosHand = new List<Card>()
+            var PairOfTwosHand = new List<Card>()
             {
                 new Card() { Rank = Rank.Two },
                 new Card() { Rank = Rank.Jack },
@@ -28,16 +28,16 @@ namespace PokerEngineTests
                 new Card() { Rank = Rank.Nine }
             };
 
-            List<Card> actualWinningHand = Poker.CalculateWinningHand(PairOfTwosHand, fivesAndTwosHand);
+            var actualWinningHand = Poker.CalculateWinningHand(PairOfTwosHand, fivesAndTwosHand);
 
-            List<Card> expectedWinningHand = fivesAndTwosHand;
+            var expectedWinningHand = fivesAndTwosHand;
             Assert.AreEqual(expectedWinningHand, actualWinningHand);
         }
 
         [TestMethod]
         public void hand_with_two_pair_wins_by_high_card()
         {
-            List<Card> fivesAndTwosAceHighHand = new List<Card>()
+            var fivesAndTwosAceHighHand = new List<Card>()
             {
                 new Card() { Rank = Rank.Two },
                 new Card() { Rank = Rank.Ace },
@@ -46,7 +46,7 @@ namespace PokerEngineTests
                 new Card() { Rank = Rank.Five }
             };
 
-            List<Card> fivesAndTwosQueenHighHand = new List<Card>()
+            var fivesAndTwosQueenHighHand = new List<Card>()
             {
                 new Card() { Rank = Rank.Two },
                 new Card() { Rank = Rank.Queen },
@@ -55,16 +55,16 @@ namespace PokerEngineTests
                 new Card() { Rank = Rank.Five }
             };
 
-            List<Card> actualWinningHand = Poker.CalculateWinningHand(fivesAndTwosQueenHighHand, fivesAndTwosAceHighHand);
+            var actualWinningHand = Poker.CalculateWinningHand(fivesAndTwosQueenHighHand, fivesAndTwosAceHighHand);
 
-            List<Card> expectedWinningHand = fivesAndTwosAceHighHand;
+            var expectedWinningHand = fivesAndTwosAceHighHand;
             Assert.AreEqual(expectedWinningHand, actualWinningHand);
         }
 
         [TestMethod]
         public void hand_with_two_pair_wins_by_higher_top_pair()
         {
-            List<Card> acesAndFivessHand = new List<Card>()
+            var acesAndFivessHand = new List<Card>()
             {
                 new Card() { Rank = Rank.Two },
                 new Card() { Rank = Rank.Ace },
@@ -73,7 +73,7 @@ namespace PokerEngineTests
                 new Card() { Rank = Rank.Five }
             };
 
-            List<Card> fivesAndTwosHand = new List<Card>()
+            var fivesAndTwosHand = new List<Card>()
             {
                 new Card() { Rank = Rank.Two },
                 new Card() { Rank = Rank.Queen },
@@ -82,9 +82,9 @@ namespace PokerEngineTests
                 new Card() { Rank = Rank.Five }
             };
 
-            List<Card> actualWinningHand = Poker.CalculateWinningHand(acesAndFivessHand, fivesAndTwosHand);
+            var actualWinningHand = Poker.CalculateWinningHand(acesAndFivessHand, fivesAndTwosHand);
 
-            List<Card> expectedWinningHand = acesAndFivessHand;
+            var expectedWinningHand = acesAndFivessHand;
             Assert.AreEqual(expectedWinningHand, actualWinningHand);
         }
     }
