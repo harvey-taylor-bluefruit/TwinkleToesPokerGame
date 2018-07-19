@@ -7,7 +7,13 @@ namespace PokerEngine
     {
         public static List<Card> CalculateWinningHand(List<Card> handOne, List<Card> handTwo)
         {
-            var winningHand = CalculateHandWithBestTwoPair(handOne, handTwo);
+            var winningHand = CalculateHandWithBestTrips(handOne, handTwo);
+            if (winningHand != null)
+            {
+                return winningHand;
+            }
+
+            winningHand = CalculateHandWithBestTwoPair(handOne, handTwo);
             if (winningHand != null)
             {
                 return winningHand;
@@ -20,6 +26,56 @@ namespace PokerEngine
             }
 
             return CalculateHandWithHighestCardAndKicker(handOne, handTwo);
+        }
+
+        private static List<Card> CalculateHandWithBestTrips(List<Card> handOne, List<Card> handTwo)
+        {
+            Rank handOneMostUbundantRank;
+            var numberOfMostUbundentSameRankedCardInHandOne = mostUbundentNumberOfSameRankedCard(handOne, out handOneMostUbundantRank);
+
+            Rank handTwoMostUbundantRank;
+            var numberOfMostUbundentSameRankedCardInHandTwo = mostUbundentNumberOfSameRankedCard(handTwo, out handTwoMostUbundantRank);
+
+            if (numberOfMostUbundentSameRankedCardInHandOne == 3 && numberOfMostUbundentSameRankedCardInHandTwo == 3)
+            {
+                if (handOneMostUbundantRank > handTwoMostUbundantRank)
+                {
+                    return handOne;
+                }
+                if (handOneMostUbundantRank < handTwoMostUbundantRank)
+                {
+                    return handTwo;
+                }
+                return null;
+            }
+
+            if (numberOfMostUbundentSameRankedCardInHandOne == 3)
+            {
+                return handOne;
+            }
+            if (numberOfMostUbundentSameRankedCardInHandTwo == 3)
+            {
+                return handTwo;
+            }
+            return null;
+        }
+
+        private static int mostUbundentNumberOfSameRankedCard(List<Card> hand, out Rank rankOfMostUbendentCard)
+        {
+            var countOfCard = 0;
+            var highestCount = countOfCard;
+
+            foreach (var cardToCount in hand)
+            {
+                countOfCard = hand.Count(card => card.Rank == cardToCount.Rank);
+                if(highestCount < countOfCard)
+                {
+                    highestCount = countOfCard;
+                    rankOfMostUbendentCard = cardToCount.Rank;
+                }
+            }
+            rankOfMostUbendentCard = 0;
+            return highestCount;
         }
 
         private static List<Card> CalculateHandWithBestTwoPair(List<Card> handOne, List<Card> handTwo)
