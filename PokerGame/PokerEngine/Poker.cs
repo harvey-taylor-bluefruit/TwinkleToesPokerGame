@@ -32,11 +32,11 @@ namespace PokerEngine
         {
             Rank handOneMostUbundantRank;
             var numberOfMostUbundentSameRankedCardInHandOne = NumberOfMostUbundentSameRankedCard(handOne, out handOneMostUbundantRank);
-            bool handOneHasTrips = numberOfMostUbundentSameRankedCardInHandOne == 3;
+            var handOneHasTrips = numberOfMostUbundentSameRankedCardInHandOne == 3;
 
             Rank handTwoMostUbundantRank;
             var numberOfMostUbundentSameRankedCardInHandTwo = NumberOfMostUbundentSameRankedCard(handTwo, out handTwoMostUbundantRank);
-            bool handTwoHasTrips = numberOfMostUbundentSameRankedCardInHandTwo == 3;
+            var handTwoHasTrips = numberOfMostUbundentSameRankedCardInHandTwo == 3;
             
             return CalculatingWinningRanking(handOne, handTwo, handOneHasTrips, handTwoHasTrips, handOneMostUbundantRank, handTwoMostUbundantRank);
         }
@@ -59,10 +59,10 @@ namespace PokerEngine
         private static List<Card> CalculateHandWithBestPair(List<Card> handOne, List<Card> handTwo)
         {
             Rank handOnePairRank;
-            bool handOneHasPair = HasPair(handOne, out handOnePairRank);
+            var handOneHasPair = HasPair(handOne, out handOnePairRank);
 
             Rank handTwoPairRank;
-            bool handTwoHasPair = HasPair(handTwo, out handTwoPairRank);
+            var handTwoHasPair = HasPair(handTwo, out handTwoPairRank);
 
             return CalculatingWinningRanking(handOne, handTwo, handOneHasPair, handTwoHasPair, handOnePairRank, handTwoPairRank);
         }
