@@ -37,8 +37,7 @@ namespace PokerEngine
             Rank handTwoMostUbundantRank;
             var numberOfMostUbundentSameRankedCardInHandTwo = NumberOfMostUbundentSameRankedCard(handTwo, out handTwoMostUbundantRank);
             bool handTwoHasTrips = numberOfMostUbundentSameRankedCardInHandTwo == 3;
-
-
+            
             return CalculatingWinningRanking(handOne, handTwo, handOneHasTrips, handTwoHasTrips, handOneMostUbundantRank, handTwoMostUbundantRank);
         }
 
