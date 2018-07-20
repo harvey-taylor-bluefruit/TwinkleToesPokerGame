@@ -7,7 +7,13 @@ namespace PokerEngine
     {
         public static List<Card> CalculateWinningHand(List<Card> handOne, List<Card> handTwo)
         {
-            var winningHand = CalculateHandWithBestTwoPair(handOne, handTwo);
+            var winningHand = CalculateHandWithBestTrips(handOne, handTwo);
+            if (winningHand != null)
+            {
+                return winningHand;
+            }
+
+            winningHand = CalculateHandWithBestTwoPair(handOne, handTwo);
             if (winningHand != null)
             {
                 return winningHand;
@@ -22,6 +28,20 @@ namespace PokerEngine
             return CalculateHandWithHighestCardAndKicker(handOne, handTwo);
         }
 
+        private static List<Card> CalculateHandWithBestTrips(List<Card> handOne, List<Card> handTwo)
+        {
+            Rank handOneMostUbundantRank;
+            var numberOfMostUbundentSameRankedCardInHandOne = NumberOfMostUbundentSameRankedCard(handOne, out handOneMostUbundantRank);
+            bool handOneHasTrips = numberOfMostUbundentSameRankedCardInHandOne == 3;
+
+            Rank handTwoMostUbundantRank;
+            var numberOfMostUbundentSameRankedCardInHandTwo = NumberOfMostUbundentSameRankedCard(handTwo, out handTwoMostUbundantRank);
+            bool handTwoHasTrips = numberOfMostUbundentSameRankedCardInHandTwo == 3;
+
+
+            return CalculatingWinningRanking(handOne, handTwo, handOneHasTrips, handTwoHasTrips, handOneMostUbundantRank, handTwoMostUbundantRank);
+        }
+
         private static List<Card> CalculateHandWithBestTwoPair(List<Card> handOne, List<Card> handTwo)
         {
             Rank handOneRankOfFirstPair;
@@ -34,39 +54,7 @@ namespace PokerEngine
             var handTwoHasTwoPair = HasTwoPair(handTwo, out handTwoRankOfFirstPair, out handTwoRankOfSeccondPair);
             var handTwoHighestPairRank = CalculateHighestPair(handTwoRankOfFirstPair, handTwoRankOfSeccondPair);
 
-            if (handOneHasTwoPair && handTwoHasTwoPair)
-            {
-                if (handOneHighestPairRank > handTwoHighestPairRank)
-                {
-                    return handOne;
-                }
-                if (handOneHighestPairRank < handTwoHighestPairRank)
-                {
-                    return handTwo;
-                }
-                return null;
-            }
-
-            if (handOneHasTwoPair)
-            {
-                return handOne;
-            }
-            if (handTwoHasTwoPair)
-            {
-                return handTwo;
-            }
-            return null;
-        }
-
-        private static Rank CalculateHighestPair(Rank pairOneRank, Rank pairTwoRank)
-        {
-            var hand = new List<Card>()
-            {
-                new Card() { Rank = pairOneRank },
-                new Card() { Rank = pairTwoRank }
-            };
-            var highestPairRank = HighestCard(hand).Rank;
-            return highestPairRank;
+            return CalculatingWinningRanking(handOne, handTwo, handOneHasTwoPair, handTwoHasTwoPair, handOneHighestPairRank, handTwoHighestPairRank);
         }
 
         private static List<Card> CalculateHandWithBestPair(List<Card> handOne, List<Card> handTwo)
@@ -77,16 +65,31 @@ namespace PokerEngine
             Rank handTwoPairRank;
             bool handTwoHasPair = HasPair(handTwo, out handTwoPairRank);
 
-            if (handOneHasPair || handTwoHasPair)
+            return CalculatingWinningRanking(handOne, handTwo, handOneHasPair, handTwoHasPair, handOnePairRank, handTwoPairRank);
+        }
+        
+        private static List<Card> CalculatingWinningRanking(List<Card> handOne, List<Card> handTwo, bool handOneHasRanking, bool handTwoHasRanking, Rank handOneRank, Rank handTwoRank)
+        {
+            if (handOneHasRanking && handTwoHasRanking)
             {
-                if (handOnePairRank > handTwoPairRank)
+                if (handOneRank > handTwoRank)
                 {
                     return handOne;
                 }
-                if (handOnePairRank < handTwoPairRank)
+                if (handOneRank < handTwoRank)
                 {
                     return handTwo;
                 }
+                return null;
+            }
+
+            if (handOneHasRanking)
+            {
+                return handOne;
+            }
+            if (handTwoHasRanking)
+            {
+                return handTwo;
             }
             return null;
         }
@@ -115,29 +118,52 @@ namespace PokerEngine
             return null;
         }
 
-        private static bool HasPair(List<Card> hand, out Rank pair)
+        private static Rank CalculateHighestPair(Rank pairOneRank, Rank pairTwoRank)
         {
-            for (var i = 0; i < hand.Count; i++)
+            var hand = new List<Card>()
             {
-                var subHand = hand.GetRange(i + 1, hand.Count - i - 1);
-                foreach (Card card in subHand)
+                new Card() { Rank = pairOneRank },
+                new Card() { Rank = pairTwoRank }
+            };
+            var highestPairRank = HighestCard(hand).Rank;
+            return highestPairRank;
+        }
+
+        private static int NumberOfMostUbundentSameRankedCard(List<Card> hand, out Rank rankOfMostUbendentCard)
+        {
+            var countOfCard = 0;
+            var highestCount = countOfCard;
+            rankOfMostUbendentCard = 0;
+
+            foreach (var cardToCount in hand)
+            {
+                countOfCard = hand.Count(card => card.Rank == cardToCount.Rank);
+                if (highestCount < countOfCard)
                 {
-                    if (card.Rank == hand[i].Rank)
-                    {
-                        pair = card.Rank;
-                        return true;
-                    }
+                    highestCount = countOfCard;
+                    rankOfMostUbendentCard = cardToCount.Rank;
                 }
             }
-            pair = 0;
+            
+            return highestCount;
+        }
+
+        private static bool HasPair(List<Card> hand, out Rank pair)
+        {
+            var mostUbundentNumberOfSameRankedCard = NumberOfMostUbundentSameRankedCard(hand, out pair);
+            if (mostUbundentNumberOfSameRankedCard == 2)
+            {
+                return true;
+            }
             return false;
         }
 
         private static bool HasTwoPair(List<Card> hand, out Rank pairOneRank, out Rank pairTwoRank)
         {
-            var cardsWithoutFirstPair = new List<Card>(hand); 
             var handHasOnePair = HasPair(hand, out pairOneRank);
+            
             var rankofCardsToRemove =  pairOneRank;
+            var cardsWithoutFirstPair = new List<Card>(hand);
             cardsWithoutFirstPair.RemoveAll(card => card.Rank == rankofCardsToRemove);
 
             var handHasSecondPair = HasPair(cardsWithoutFirstPair, out pairTwoRank);
@@ -148,7 +174,6 @@ namespace PokerEngine
             }
             return false;
         }
-
 
         private static Card HighestCard(List<Card> hand)
         {
