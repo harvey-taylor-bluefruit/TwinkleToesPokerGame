@@ -7,7 +7,13 @@ namespace PokerEngine
     {
         public static List<Card> CalculateWinningHand(List<Card> handOne, List<Card> handTwo)
         {
-            var winningHand = CalculateHandWithBestTrips(handOne, handTwo);
+            var winningHand = CalculateHandHasWithTheBestStraight(handOne, handTwo);
+            if (winningHand != null)
+            {
+                return winningHand;
+            }
+
+            winningHand = CalculateHandWithBestTrips(handOne, handTwo);
             if (winningHand != null)
             {
                 return winningHand;
@@ -26,6 +32,42 @@ namespace PokerEngine
             }
 
             return CalculateHandWithHighestCardAndKicker(handOne, handTwo);
+        }
+
+        private static List<Card> CalculateHandHasWithTheBestStraight(List<Card> handOne, List<Card> handTwo)
+        {
+            Rank rankOfHandOneHighCard;
+            var handOneHasStraight = hasStraight(handOne, out rankOfHandOneHighCard);
+
+            Rank rankOfHandTwoHighCard;
+            var handTwoHasStraight = hasStraight(handTwo, out rankOfHandTwoHighCard);
+
+            return CalculatingWinningRanking(handOne, handTwo, handOneHasStraight, handTwoHasStraight, rankOfHandOneHighCard, rankOfHandTwoHighCard);
+        }
+
+        private static bool hasStraight(List<Card> hand, out Rank rankOfHighestCardInStraight)
+        {
+            var handOrderedByHighestCard = hand
+                .OrderBy(card => card.Rank)
+                .ToList();
+
+            if(handOrderedByHighestCard[handOrderedByHighestCard.Count()-1].Rank == Rank.Ace)
+            {
+                handOrderedByHighestCard.RemoveAt(handOrderedByHighestCard.Count - 1);
+            }
+
+            var previousCard = handOrderedByHighestCard[0];
+            for(int i = 1; i < handOrderedByHighestCard.Count(); i++)
+            {
+                if(handOrderedByHighestCard[i].Rank != previousCard.Rank+1)
+                {
+                    rankOfHighestCardInStraight = 0;
+                    return false;
+                }
+                previousCard = handOrderedByHighestCard[i];
+            }
+            rankOfHighestCardInStraight = previousCard.Rank;
+            return true;
         }
 
         private static List<Card> CalculateHandWithBestTrips(List<Card> handOne, List<Card> handTwo)
