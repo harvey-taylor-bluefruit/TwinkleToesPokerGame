@@ -8,6 +8,7 @@
 
     public enum Rank
     {
+        Invalid = 0, 
         Two = 2,
         Three,
         Four,
